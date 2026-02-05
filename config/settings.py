@@ -134,3 +134,12 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend"
     ],
 }
+
+
+
+#swagger settings
+SPECTACULAR_SETTINGS = {
+    "TITLE": "E-Commerce Backend API",
+    "DESCRIPTION": "Project Nexus – ProDev Backend Engineering",
+    "VERSION": "1.0.0",
+}
