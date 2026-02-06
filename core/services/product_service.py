@@ -1,10 +1,15 @@
+from linecache import cache
 from core.models import Product
 
 class ProductService:
 
     @staticmethod
     def list_products():
-        return Product.objects.filter(is_active=True)
+        products = cache.get("products_list")
+        if not products:
+            products = Product.objects.filter(is_active=True)
+            cache.set("products_list", products, timeout=60 * 5)
+        return products
 
     @staticmethod
     def create_product(data):

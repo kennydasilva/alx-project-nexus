@@ -9,12 +9,15 @@ from core.permissions import IsAdmin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from core.filters import ProductFilter
+from core.serializers.product_serializer import ProductSerializer
 
 class ProductViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = ProductFilter
     ordering_fields = ["price", "created_at"]
+
+    serializer_class = ProductSerializer
 
 
     def get_permissions(self):

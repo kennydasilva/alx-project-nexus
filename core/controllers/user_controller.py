@@ -4,26 +4,33 @@ from rest_framework.response import Response
 from core.models import User
 from core.serializers.user_serializer import UserSerializer
 from core.services.user_service import UserService
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class UserViewSet(viewsets.ViewSet):
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [AllowAny()]  
+        return [IsAuthenticated()]
 
     def list(self, request):
         users = UserService.list_users()
-        serializer = UserSerializer(users, many=True)
+        serializer = self.serializer_class(users, many=True)
         return Response(serializer.data)
 
     def create(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = UserService.create_user(serializer.validated_data)
         return Response(
-            UserSerializer(user).data,
+            self.serializer_class(user).data,
             status=status.HTTP_201_CREATED
         )
 
     def retrieve(self, request, pk=None):
         user = UserService.get_user_by_id(pk)
-        serializer = UserSerializer(user)
+        serializer = self.serializer_class(user)
         return Response(serializer.data)
 
     def destroy(self, request, pk=None):
