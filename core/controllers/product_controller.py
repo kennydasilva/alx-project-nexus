@@ -4,8 +4,23 @@ from rest_framework.response import Response
 from core.models import Product
 from core.serializers.product_serializer import ProductSerializer
 from core.services.product_service import ProductService
+from rest_framework.permissions import IsAuthenticated
+from core.permissions import IsAdmin
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+from core.filters import ProductFilter
 
 class ProductViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_class = ProductFilter
+    ordering_fields = ["price", "created_at"]
+
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "destroy"]:
+            return [IsAdmin()]
+        return super().get_permissions()
 
     def list(self, request):
         products = ProductService.list_products()
