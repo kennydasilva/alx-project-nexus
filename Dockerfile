@@ -14,5 +14,8 @@ COPY . .
 # Copia entrypoint
 COPY entrypoint.sh .
 
+# Garante que o entrypoint é executável (evita permission denied em runtime)
+RUN chmod +x entrypoint.sh
+
 # Executa entrypoint no runtime
 CMD ["./entrypoint.sh"]
