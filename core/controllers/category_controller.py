@@ -6,6 +6,7 @@ from core.serializers.category_serializer import CategorySerializer
 from core.services.category_service import CategoryService
 
 class CategoryViewSet(viewsets.ViewSet):
+    serializer_class = CategorySerializer
 
     def list(self, request):
         categories = CategoryService.list_categories()
