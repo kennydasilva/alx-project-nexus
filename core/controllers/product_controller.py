@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from core.models import Product
 from core.serializers.product_serializer import ProductSerializer
@@ -27,8 +28,10 @@ class ProductViewSet(viewsets.ViewSet):
 
     def list(self, request):
         products = ProductService.list_products()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(products, request)
+        serializer = ProductSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def create(self, request):
         serializer = ProductSerializer(data=request.data)

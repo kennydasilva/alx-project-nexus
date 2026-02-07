@@ -1,4 +1,4 @@
-from linecache import cache
+from django.core.cache import cache
 from core.models import Product
 
 class ProductService:
