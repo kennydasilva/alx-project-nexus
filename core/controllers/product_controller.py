@@ -27,11 +27,17 @@ class ProductViewSet(viewsets.ViewSet):
         return super().get_permissions()
 
     def list(self, request):
-        products = ProductService.list_products()
+        queryset = ProductService.list_products()
+
+                                
+        queryset = self.filter_queryset(queryset)
+
         paginator = PageNumberPagination()
-        page = paginator.paginate_queryset(products, request)
+        page = paginator.paginate_queryset(queryset, request)
+
         serializer = ProductSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
 
     def create(self, request):
         serializer = ProductSerializer(data=request.data)
